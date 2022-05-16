@@ -51,11 +51,11 @@ app.delete('/api/persons/:id', (req, res) => {
 });
 
 app.get('api/persons/:id', (req, res) => {
-    const id = req.params.id
-    console.log(id)
-    const person = persons.find(person => person.id === id)
-    console.log(person)
-    res.json(person)
+    const id = Number(req.params.id);
+    console.log(id);
+    const person = persons.find(person => person.id === id);
+    console.log(person);
+    res.json(person);
 })
 
 const PORT = 3001;
