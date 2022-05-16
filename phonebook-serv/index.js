@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/bye', (req, res) => {
-    res.send('<h3>Hyvästi muuailma!');
+    res.send('<h3>Hyvästi muuailma!</h3>');
 });
 
 app.get('/info', (req, res) => {
