@@ -39,18 +39,20 @@ app.get('/info', (req, res) => {
     res.send(`<h3>Phonebook has info for ${num} people</h3>`);
 });
 
-app.get('/api/notes', (req, res) => {
-    res.json(notes);
+app.get('/api/persons', (req, res) => {
+    res.json(persons);
 });
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
+    console.log(id);
     persons = persons.filter(person => person.id !== id);
+    console.log(persons);
 
     res.status(204).end();
 });
 
-app.get('api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
     console.log(id);
     const person = persons.find(person => person.id === id);
