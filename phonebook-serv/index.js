@@ -36,7 +36,7 @@ app.get('/bye', (req, res) => {
 
 app.get('/info', (req, res) => {
     let num = persons.length
-    res.send(`<h3>Phonebook has info for ${length} people</h3>`);
+    res.send(`<h3>Phonebook has info for ${num} people</h3>`);
 });
 
 app.get('/api/notes', (req, res) => {
