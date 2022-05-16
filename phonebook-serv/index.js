@@ -31,11 +31,23 @@ app.get('/', (req, res) => {
 });
 
 app.get('/bye', (req, res) => {
-    res.send('<h3>Hyvästi muuailma!');
+    res.send('<h3>Hyvästi muuailma!</h3>');
 });
 
-app.get('/api/persons', (req, res) => {
-    res.json(persons);
+app.get('/info', (req, res) => {
+    let num = persons.length
+    res.send(`<h3>Phonebook has info for ${num} people</h3>`);
+});
+
+app.get('/api/notes', (req, res) => {
+    res.json(notes);
+});
+
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id);
+    persons = persons.filter(person => person.id !== id);
+
+    res.status(204).end();
 });
 
 app.get('api/persons/:id', (req, res) => {
