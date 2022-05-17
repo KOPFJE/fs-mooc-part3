@@ -31,13 +31,8 @@ app.get('/api/', (req, res) => {
     res.send('<h1>Hello World!</h1>');
 });
 
-<<<<<<< HEAD
-app.get('/api/bye', (req, res) => {
-    res.send('<h3>Hyvästi muuailma!');
-=======
 app.get('/bye', (req, res) => {
     res.send('<h3>Hyvästi muuailma!</h3>');
->>>>>>> ce7d9869aa93abee78474ab5c5cd44898427a078
 });
 
 app.get('/api/info', (req, res) => {
