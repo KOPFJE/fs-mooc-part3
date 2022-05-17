@@ -31,8 +31,13 @@ app.get('/api/', (req, res) => {
     res.send('<h1>Hello World!</h1>');
 });
 
+<<<<<<< HEAD
 app.get('/api/bye', (req, res) => {
     res.send('<h3>Hyvästi muuailma!');
+=======
+app.get('/bye', (req, res) => {
+    res.send('<h3>Hyvästi muuailma!</h3>');
+>>>>>>> ce7d9869aa93abee78474ab5c5cd44898427a078
 });
 
 app.get('/api/info', (req, res) => {
@@ -53,10 +58,20 @@ app.post('/api/persons', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
+    console.log(id);
     persons = persons.filter(person => person.id !== id);
+    console.log(persons);
 
     res.status(204).end();
 });
+
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id);
+    console.log(id);
+    const person = persons.find(person => person.id === id);
+    console.log(person);
+    res.json(person);
+})
 
 const PORT = 3001;
 app.listen(PORT, () => {
