@@ -25,23 +25,31 @@ let persons = [
 ];
 
 const app = express();
+app.use(express.json())
 
-app.get('/', (req, res) => {
+app.get('/api/', (req, res) => {
     res.send('<h1>Hello World!</h1>');
 });
 
-app.get('/bye', (req, res) => {
+app.get('/api/bye', (req, res) => {
     res.send('<h3>Hyvästi muuailma!');
 });
 
-app.get('/info', (req, res) => {
+app.get('/api/info', (req, res) => {
     let num = persons.length
     res.send(`<h3>Phonebook has info for ${num} people</h3>`);
 });
 
-app.get('/api/notes', (req, res) => {
-    res.json(notes);
+app.get('/api/persons', (req, res) => {
+    res.json(persons);
 });
+
+app.post('/api/persons', (req, res) => {
+    let person = req.body
+    person.id = Math.floor(Math.random() * 5000)
+    persons = persons.concat(person)
+    res.status(200).end()
+})
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
