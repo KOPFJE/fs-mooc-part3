@@ -29,6 +29,8 @@ const app = express();
 app.use(express.json());
 app.use(morgan('tiny'));
 
+morgan.token('person', function (req) { return req.headers['content-type'] });
+
 app.get('/api/', (req, res) => {
     res.send('<h1>Hello World!</h1>');
 });
@@ -48,11 +50,13 @@ app.get('/api/persons', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     let person = req.body
-    person.id = Math.floor(Math.random() * 5000)
+    let id = Math.floor(Math.random() * 5000);
+    while(persons.some(p => p.id === id)) {
+        id = Math.floor(Math.random() * 5000);
+    }
+    person.id = id;
     persons = persons.concat(person)
-    res.status(200).end(
-        morgan.token('type', function (req, res) { return req.headers['content-type'] })
-    )
+    res.status(200).end()
 })
 
 app.delete('/api/persons/:id', (req, res) => {
