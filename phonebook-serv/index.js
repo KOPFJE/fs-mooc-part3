@@ -1,4 +1,6 @@
 const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
 
 
 let persons = [
@@ -25,7 +27,11 @@ let persons = [
 ];
 
 const app = express();
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
+
+morgan.token('body', (req, res) => { return JSON.stringify(req.body) });
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.get('/api/', (req, res) => {
     res.send('<h1>Hello World!</h1>');
@@ -46,7 +52,31 @@ app.get('/api/persons', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     let person = req.body
-    person.id = Math.floor(Math.random() * 5000)
+    let id = Math.floor(Math.random() * 5000);
+    while(persons.some(p => p.id === id)) {
+        id = Math.floor(Math.random() * 5000);
+    }
+    person.id = id;
+
+    if (!person.name) {
+        return res.status(400).json({
+            error: "name missing"
+        })
+        }
+        
+    if (!person.number) {
+        return res.status(400).json({
+            error: "number missing"
+        })
+        }
+    
+
+    if(persons.some(p => p.name === person.name))
+        return res.status(400).json({
+            error: "name must be unique"
+        })
+
+        
     persons = persons.concat(person)
     res.status(200).end()
 })
