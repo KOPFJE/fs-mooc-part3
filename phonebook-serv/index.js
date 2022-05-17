@@ -26,6 +26,7 @@ let persons = [
 ];
 
 const app = express();
+app.use(express.json());
 app.use(morgan('tiny'));
 
 app.get('/api/', (req, res) => {
@@ -49,7 +50,9 @@ app.post('/api/persons', (req, res) => {
     let person = req.body
     person.id = Math.floor(Math.random() * 5000)
     persons = persons.concat(person)
-    res.status(200).end()
+    res.status(200).end(
+        morgan.token('type', function (req, res) { return req.headers['content-type'] })
+    )
 })
 
 app.delete('/api/persons/:id', (req, res) => {
