@@ -27,9 +27,9 @@ let persons = [
 
 const app = express();
 app.use(express.json());
-app.use(morgan('tiny'));
 
-morgan.token('person', function (req) { return req.headers['content-type'] });
+morgan.token('body', (req, res) => { return JSON.stringify(req.body) });
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.get('/api/', (req, res) => {
     res.send('<h1>Hello World!</h1>');
