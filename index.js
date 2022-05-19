@@ -21,12 +21,13 @@ app.get('/api/persons', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
+    console.log(req.body)
 
-    if (body.content === undefined) {return res.status(400).json({ error: 'content missing'})}
+    if (body === undefined) {return res.status(400).json({ error: 'content missing'})}
 
     const person = new Person({
-        name: body.name,
-        number: body.number
+        name: String(body.name),
+        number: String(body.number)
     })
 
     person.save().then(savedPerson => {
@@ -35,14 +36,16 @@ app.post('/api/persons', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    persons = persons.filter(person => person.id !== id);
-    res.status(204).end();
+    const id = req.params.id;
+    Person.findByIdAndRemove(id)
+        .then(result => {
+            res.status(204).end();
+        })
 });
 
 app.get('/api/persons/:id', (req, res) => {
-    Person.findById(request.params.id).then(person => {
-        response.json(person)
+    Person.findById(req.params.id).then(person => {
+        res.json(person)
     })
 })
 
