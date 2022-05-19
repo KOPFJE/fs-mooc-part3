@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 
-const Person = require('./models/person');
+const Person = require('./models/Person');
 const { response } = require('express');
 
 const app = express();
@@ -12,6 +12,8 @@ app.use(express.static('build'));
 
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
+        console.log(req.body)
+        console.log(persons)
         res.json(persons)
     })
 });
