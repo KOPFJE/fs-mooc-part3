@@ -1,16 +1,13 @@
 require('dotenv').config()
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+const express = require('express')
+const cors = require('cors')
 
-const Person = require('./models/Person');
-const { response } = require('express');
-const { send } = require('express/lib/response');
+const Person = require('./models/Person')
 
-const app = express();
-app.use(express.json());
-app.use(cors());
-app.use(express.static('build'));
+const app = express()
+app.use(express.json())
+app.use(cors())
+app.use(express.static('build'))
 
 app.get('/api/persons', (req, res, next) => {
     Person
@@ -18,7 +15,7 @@ app.get('/api/persons', (req, res, next) => {
             res.json(persons)
         })
         .catch(error => next(error))
-});
+})
 
 app.post('/api/persons', (req, res, next) => {
     const body = req.body
@@ -45,7 +42,7 @@ app.put('/api/persons/:id', (req, res, next) => {
         number: String(body.number)
     })
 
-    Person.findByIdAndUpdate(req.params.id, person, {new: true})
+    Person.findByIdAndUpdate(req.params.id, person, {new: true, runValidators: true, context: 'query'})
         .then(updatedPerson => {
             res.json(updatedPerson)
         })
@@ -54,11 +51,11 @@ app.put('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
-        .then(res => {
-            res.status(204).end();
+        .then(() => {
+            res.status(204).end()
         })
         .catch(error => next(error))
-});
+})
 
 app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
@@ -69,24 +66,29 @@ app.get('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error))
 })
 
+const errorHandler = (error, req, res) => {
+    let status = error.status
+    if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return res.status(400).json({ error: error.message })}
+    else if(status === undefined) {
+        status = 500}
+    console.error(error.message)
+    return(
+        res.status(status).send({error : error.message})
+    )
+}
+
+app.use(errorHandler)
+
 const unknownEndpoint = (req, res) => {
     res.status(404).send({ error: 'unknown endpoint'})
 }
 
 app.use(unknownEndpoint)
 
-const errorHandler = (error, req, res, next) => {
-    let status = error.status
-    if(status === undefined) {status = 500}
-    console.error(error.message)
-    return(
-        res.status(status).send({error : `${error.message}`})
-    )
-}
-
-app.use(errorHandler)
-
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port: ${PORT}`);
-});
+    console.log(`Server running on port: ${PORT}`)
+})
