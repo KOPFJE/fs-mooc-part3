@@ -66,21 +66,9 @@ app.get('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error))
 })
 
-const errorHandler = (error, req, res) => {
-    let status = error.status
-    if (error.name === 'CastError') {
-        return res.status(400).send({ error: 'malformatted id' })
-    } else if (error.name === 'ValidationError') {
-        return res.status(400).json({ error: error.message })}
-    else if(status === undefined) {
-        status = 500}
-    console.error(error.message)
-    return(
-        res.status(status).send({error : error.message})
-    )
-}
-
-app.use(errorHandler)
+app.use((error, req, res, next) => {
+    res.status(500).json({error : error.message});
+})
 
 const unknownEndpoint = (req, res) => {
     res.status(404).send({ error: 'unknown endpoint'})
